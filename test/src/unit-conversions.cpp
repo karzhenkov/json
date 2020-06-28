@@ -1766,7 +1766,7 @@ TEST_CASE("std::optional")
         std::map<std::string, std::optional<int>> opt_object {{"one", 1}, {"two", 2}, {"zero", std::nullopt}};
 
         CHECK(json(opt_object) == j_object);
-        std::map<std::string, std::optional<int>> tmp =j_object;
+        std::map<std::string, std::optional<int>> tmp = j_object;
         CHECK(tmp == opt_object);
     }
 }
