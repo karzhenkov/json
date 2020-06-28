@@ -133,6 +133,7 @@ set(files
     src/unit-ubjson.cpp
     src/unit-udt.cpp
     src/unit-unicode.cpp
+    src/unit-user_defined_input.cpp
     src/unit-wstring.cpp)
 
 foreach(file ${files})
@@ -183,6 +184,7 @@ add_dependencies(json_unit download_test_data)
 #############################################################################
 # Test the generated build configs
 #############################################################################
+
 add_subdirectory(cmake_import)
 add_subdirectory(cmake_import_minver)
 add_subdirectory(cmake_add_subdirectory)
