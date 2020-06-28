@@ -336,9 +336,9 @@ script:
   # compile and execute unit tests
   - mkdir -p build && cd build
   - if [[ "${CMAKE_CXX_STANDARD}" != "" ]]; then
-    cmake .. ${CMAKE_OPTIONS} -DJSON_MultipleHeaders=${MULTIPLE_HEADERS} -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -DJSON_BuildTests=On -GNinja && cmake --build . --config Release
+    cmake .. ${CMAKE_OPTIONS} -DJSON_MultipleHeaders=${MULTIPLE_HEADERS} -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -DJSON_BuildTests=On -GNinja && cmake --build . --config Release ;
     else
-    cmake .. ${CMAKE_OPTIONS} -DJSON_MultipleHeaders=${MULTIPLE_HEADERS} -DJSON_BuildTests=On -GNinja && cmake --build . --config Release
+    cmake .. ${CMAKE_OPTIONS} -DJSON_MultipleHeaders=${MULTIPLE_HEADERS} -DJSON_BuildTests=On -GNinja && cmake --build . --config Release ;
     fi
   - ctest -C Release --timeout 2700 -V -j
   - cd ..
