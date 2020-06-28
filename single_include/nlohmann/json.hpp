@@ -15998,7 +15998,8 @@ Format](http://rfc7159.net/rfc7159)
 @nosubgrouping
 */
 
-namespace detail {
+namespace detail
+{
 
 template <typename J, typename V>
 class optional_converter_helper_base
@@ -16012,11 +16013,17 @@ class optional_converter_helper_base
         return static_cast<const J*>(this)->template get<result_type>();
     }
 
-public:
+  public:
 
-    operator result_type () { return get(); }
+    operator result_type ()
+    {
+        return get();
+    }
 
-    operator result_type () const { return get(); }
+    operator result_type () const
+    {
+        return get();
+    }
 
 #endif
 };
@@ -16029,7 +16036,7 @@ class optional_converter_helper: public optional_converter_helper_base<J, V>... 
 NLOHMANN_BASIC_JSON_TPL_DECLARATION
 class basic_json
     : public detail::optional_converter_helper<NLOHMANN_BASIC_JSON_TPL,
-        StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType>
+      StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType>
 {
   private:
     template<detail::value_t> friend struct detail::external_constructor;

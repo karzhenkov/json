@@ -165,8 +165,46 @@ Format](http://rfc7159.net/rfc7159)
 
 @nosubgrouping
 */
+
+namespace detail
+{
+
+template <typename J, typename V>
+class optional_converter_helper_base
+{
+#ifdef JSON_HAS_CPP_17
+
+    using result_type = std::optional<V>;
+
+    auto get() const
+    {
+        return static_cast<const J*>(this)->template get<result_type>();
+    }
+
+  public:
+
+    operator result_type ()
+    {
+        return get();
+    }
+
+    operator result_type () const
+    {
+        return get();
+    }
+
+#endif
+};
+
+template <typename J, typename... V>
+class optional_converter_helper: public optional_converter_helper_base<J, V>... {};
+
+} // detail
+
 NLOHMANN_BASIC_JSON_TPL_DECLARATION
 class basic_json
+    : public detail::optional_converter_helper<NLOHMANN_BASIC_JSON_TPL,
+      StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType>
 {
   private:
     template<detail::value_t> friend struct detail::external_constructor;
