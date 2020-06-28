@@ -1715,6 +1715,12 @@ TEST_CASE("std::optional")
 
         std::optional<std::string> tmp = j_null;
         CHECK(tmp == std::nullopt);
+
+        CHECK_THROWS_WITH(std::optional<bool>(json()),
+                          "[json.exception.type_error.302] type must be boolean, but is null");
+
+        std::optional<bool> tmp2 = json();
+        CHECK(tmp2 == std::nullopt);
     }
 
     SECTION("string")
