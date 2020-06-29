@@ -121,7 +121,27 @@ TEST_CASE("concepts")
 
         SECTION("StandardLayoutType")
         {
-            CHECK(std::is_standard_layout<json>::value);
+            // Workaround for MSVC library implementation bug
+            struct can_use_standard_layout_trait
+            {
+                struct A { };
+                struct B { };
+
+                struct C: A, B { };
+
+                struct D: C
+                {
+                    int v;
+                };
+
+                constexpr operator bool() const
+                {
+                    // should return true
+                    return std::is_standard_layout<D>::value;
+                }
+            };
+
+            CHECK((!can_use_standard_layout_trait() || std::is_standard_layout<json>::value));
         }
     }
 
