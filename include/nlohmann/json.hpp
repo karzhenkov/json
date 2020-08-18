@@ -170,7 +170,7 @@ namespace detail
 {
 
 template <typename J, typename V>
-class optional_converter_helper_base
+class JSON_HEDLEY_EMPTY_BASES optional_converter_helper_base
 {
 #ifdef JSON_HAS_CPP_17
 
@@ -199,7 +199,7 @@ class optional_converter_helper_base
 template <typename J, typename... V>
 class optional_converter_helper: public optional_converter_helper_base<J, V>... {};
 
-} // detail
+} // namespace detail
 
 NLOHMANN_BASIC_JSON_TPL_DECLARATION
 class basic_json
