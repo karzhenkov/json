@@ -1,7 +1,7 @@
 /*
     __ _____ _____ _____
  __|  |   __|     |   | |  JSON for Modern C++ (test suite)
-|  |  |__   |  |  | | | |  version 3.8.0
+|  |  |__   |  |  | | | |  version 3.9.1
 |_____|_____|_____|_|___|  https://github.com/nlohmann/json
 
 Licensed under the MIT License <http://opensource.org/licenses/MIT>.
@@ -30,10 +30,9 @@ SOFTWARE.
 #include "doctest_compatibility.h"
 DOCTEST_GCC_SUPPRESS_WARNING("-Wfloat-equal")
 
-#define private public
+#define JSON_TESTS_PRIVATE
 #include <nlohmann/json.hpp>
 using nlohmann::json;
-#undef private
 
 #include <deque>
 #include <forward_list>
@@ -341,7 +340,7 @@ TEST_CASE("constructors")
             CHECK(j.type() == json::value_t::array);
             CHECK(j == json({1, 2, 3, 4, 5}));
 
-            std::valarray<int> jva = j;
+            auto jva = j.get<std::valarray<int>>();
             CHECK(jva.size() == va.size());
             for (size_t i = 0; i < jva.size(); ++i)
             {
@@ -356,7 +355,7 @@ TEST_CASE("constructors")
             CHECK(j.type() == json::value_t::array);
             CHECK(j == json({1.2, 2.3, 3.4, 4.5, 5.6}));
 
-            std::valarray<double> jva = j;
+            auto jva = j.get<std::valarray<double>>();
             CHECK(jva.size() == va.size());
             for (size_t i = 0; i < jva.size(); ++i)
             {
@@ -846,8 +845,8 @@ TEST_CASE("constructors")
             CHECK(j.type() == json::value_t::number_float);
 
             // check round trip of NaN
-            json::number_float_t d = j;
-            CHECK((std::isnan(d) and std::isnan(n)) == true);
+            json::number_float_t d{j};
+            CHECK((std::isnan(d) && std::isnan(n)) == true);
 
             // check that NaN is serialized to null
             CHECK(j.dump() == "null");
@@ -861,7 +860,7 @@ TEST_CASE("constructors")
             CHECK(j.type() == json::value_t::number_float);
 
             // check round trip of infinity
-            json::number_float_t d = j;
+            json::number_float_t d{j};
             CHECK(d == n);
 
             // check that inf is serialized to null

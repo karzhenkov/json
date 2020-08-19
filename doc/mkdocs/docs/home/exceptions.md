@@ -32,6 +32,24 @@ Exceptions are used widely within the library. They can, however, be switched of
 
 Note that `JSON_THROW_USER` should leave the current scope (e.g., by throwing or aborting), as continuing after it may yield undefined behavior.
 
+??? example
+
+    The code below switches off exceptions and creates a log entry with a detailed error message in case of errors.
+
+    ```cpp
+    #include <iostream>
+    
+    #define JSON_TRY_USER if(true)
+    #define JSON_CATCH_USER(exception) if(false)
+    #define JSON_THROW_USER(exception)                           \
+        {std::clog << "Error in " << __FILE__ << ":" << __LINE__ \
+                   << " (function " << __FUNCTION__ << ") - "    \
+                   << (exception).what() << std::endl;           \
+         std::abort();}
+    
+    #include <nlohmann/json.hpp>
+    ```
+
 ## Parse errors
 
 This exception is thrown by the library when a parse error occurs. Parse errors
@@ -261,6 +279,16 @@ The parsing of the corresponding BSON record type is not implemented (yet).
     [json.exception.parse_error.114] parse error at byte 5: Unsupported BSON record type 0xFF
     ```
 
+### json.exception.parse_error.115
+
+A UBJSON high-precision number could not be parsed.
+
+!!! failure "Example message"
+
+    ```
+    [json.exception.parse_error.115] parse error at byte 5: syntax error while parsing UBJSON high-precision number: invalid number text: 1A
+    ```
+
 ## Iterator errors
 
 This exception is thrown if iterators passed to a library function do not match
@@ -294,7 +322,7 @@ The iterators passed to constructor `basic_json(InputIT first, InputIT last)` ar
 
 ### json.exception.invalid_iterator.202
 
-In an erase or insert function, the passed iterator @a pos does not belong to the JSON value for which the function was called. It hence does not define a valid position for the deletion/insertion.
+In an [erase](../api/basic_json/erase.md) or insert function, the passed iterator `pos` does not belong to the JSON value for which the function was called. It hence does not define a valid position for the deletion/insertion.
 
 !!! failure "Example message"
 
@@ -307,7 +335,7 @@ In an erase or insert function, the passed iterator @a pos does not belong to th
 
 ### json.exception.invalid_iterator.203
 
-Either iterator passed to function `erase(IteratorType` first, IteratorType last) does not belong to the JSON value from which values shall be erased. It hence does not define a valid range to delete values from.
+Either iterator passed to function [`erase(IteratorType first, IteratorType last`)](../api/basic_json/erase.md) does not belong to the JSON value from which values shall be erased. It hence does not define a valid range to delete values from.
 
 !!! failure "Example message"
 
@@ -317,7 +345,7 @@ Either iterator passed to function `erase(IteratorType` first, IteratorType last
 
 ### json.exception.invalid_iterator.204
 
-When an iterator range for a primitive type (number, boolean, or string) is passed to a constructor or an erase function, this range has to be exactly (`begin(),` `end()),` because this is the only way the single stored value is expressed. All other ranges are invalid.
+When an iterator range for a primitive type (number, boolean, or string) is passed to a constructor or an [erase](../api/basic_json/erase.md) function, this range has to be exactly (`begin(),` `end()),` because this is the only way the single stored value is expressed. All other ranges are invalid.
 
 !!! failure "Example message"
 
@@ -327,7 +355,7 @@ When an iterator range for a primitive type (number, boolean, or string) is pass
 
 ### json.exception.invalid_iterator.205
 
-When an iterator for a primitive type (number, boolean, or string) is passed to an erase function, the iterator has to be the `begin()` iterator, because it is the only way to address the stored value. All other iterators are invalid.
+When an iterator for a primitive type (number, boolean, or string) is passed to an [erase](../api/basic_json/erase.md) function, the iterator has to be the `begin()` iterator, because it is the only way to address the stored value. All other iterators are invalid.
 
 !!! failure "Example message"
 
@@ -521,7 +549,7 @@ The `value()` member functions can only be executed for certain JSON types.
 
 ### json.exception.type_error.307
 
-The `erase()` member functions can only be executed for certain JSON types.
+The [`erase()`](../api/basic_json/erase.md) member functions can only be executed for certain JSON types.
 
 !!! failure "Example message"
 
@@ -746,6 +774,10 @@ UBJSON and BSON only support integer numbers up to 9223372036854775807.
     ```
     number overflow serializing '9223372036854775808'
     ```
+
+!!! note
+
+    Since version 3.9.0, integer numbers beyond int64 are serialized as high-precision UBJSON numbers, and this exception does not further occur. 
 
 ### json.exception.out_of_range.408
 
