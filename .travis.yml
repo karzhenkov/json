@@ -334,7 +334,9 @@ script:
   - if [[ "${IMPLICIT_CONVERSIONS}" == "" ]]; then export IMPLICIT_CONVERSIONS=ON; fi
 
   # append CXX_STANDARD to CMAKE_OPTIONS if required
-  - CMAKE_OPTIONS+=${CXX_STANDARD:+ -DCMAKE_CXX_STANDARD=$CXX_STANDARD}
+  - CMAKE_OPTIONS+=${CXX_STANDARD:+ -DCMAKE_CXX_STANDARD=$CXX_STANDARD -DCMAKE_CXX_STANDARD_REQUIRED=ON}
+
+  - CMAKE_OPTIONS+=" -DCMAKE_VERBOSE_MAKEFILE=ON"
 
   # compile and execute unit tests
   - mkdir -p build && cd build
