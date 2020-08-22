@@ -2048,11 +2048,35 @@ JSON_HEDLEY_DIAGNOSTIC_POP
     #define JSON_HAS_CPP_14
 #endif
 
-#ifdef JSON_HAS_CPP_17
+namespace nlohmann {
+namespace std_aliases { }
+using namespace std_aliases;
+}
+
+#if defined(JSON_HAS_CPP_17)
     #if __has_include(<optional>)
         #include <optional>
+        namespace nlohmann::std_aliases {
+            using std::optional;
+            using std::nullopt;
+        }
     #elif __has_include(<experimental/optional>)
         #include <experimental/optional>
+        namespace nlohmann::std_aliases {
+            using std::experimental::optional;
+            using std::experimental::nullopt;
+        }
+    #endif
+    #if __has_include(<string_view>)
+        #include <string_view>
+        namespace nlohmann::std_aliases {
+            using std::string_view;
+        }
+    #elif __has_include(<experimental/string_view>)
+        #include <experimental/string_view>
+        namespace nlohmann::std_aliases {
+            using std::experimental::string_view;
+        }
     #endif
 #endif
 
@@ -3449,11 +3473,11 @@ void from_json(const BasicJsonType& j, typename std::nullptr_t& n)
 
 #ifdef JSON_HAS_CPP_17
 template<typename BasicJsonType, typename T>
-void from_json(const BasicJsonType& j, std::optional<T>& opt)
+void from_json(const BasicJsonType& j, optional<T>& opt)
 {
     if (j.is_null())
     {
-        opt = std::nullopt;
+        opt = nullopt;
     }
     else
     {
@@ -4241,9 +4265,9 @@ struct external_constructor<value_t::object>
 #ifdef JSON_HAS_CPP_17
 template<typename BasicJsonType, typename T,
          enable_if_t<std::is_constructible<BasicJsonType, T>::value, int> = 0>
-void to_json(BasicJsonType& j, const std::optional<T>& opt)
+void to_json(BasicJsonType& j, const optional<T>& opt)
 {
-    if (opt.has_value())
+    if (opt)
     {
         j = *opt;
     }
@@ -16719,7 +16743,7 @@ class JSON_HEDLEY_EMPTY_BASES optional_converter_helper_base
 {
 #ifdef JSON_HAS_CPP_17
 
-    using result_type = std::optional<V>;
+    using result_type = optional<V>;
 
     auto get() const
     {
@@ -19813,7 +19837,7 @@ class basic_json
                    !detail::is_basic_json<ValueType>::value
                    && !std::is_same<ValueType, std::initializer_list<typename string_t::value_type>>::value
 #if defined(JSON_HAS_CPP_17) && (defined(__GNUC__) || (defined(_MSC_VER) && _MSC_VER >= 1910 && _MSC_VER <= 1914))
-                   && !std::is_same<ValueType, typename std::string_view>::value
+                   && !std::is_same<ValueType, string_view>::value
 #endif
                    && detail::is_detected<detail::get_template_function, const basic_json_t&, ValueType>::value
                    , int >::type = 0 >
