@@ -336,6 +336,7 @@ script:
   # append CXX_STANDARD to CMAKE_OPTIONS if required
   - CMAKE_OPTIONS+=${CXX_STANDARD:+ -DCMAKE_CXX_STANDARD=$CXX_STANDARD -DCMAKE_CXX_STANDARD_REQUIRED=ON}
 
+  # force verbose build
   - CMAKE_OPTIONS+=" -DCMAKE_VERBOSE_MAKEFILE=ON"
 
   # compile and execute unit tests
