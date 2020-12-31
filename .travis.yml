@@ -125,18 +125,6 @@ matrix:
   # OSX / Clang
 
   - os: osx
-    osx_image: xcode9.3
-
-  - os: osx
-    osx_image: xcode9.4
-
-  - os: osx
-    osx_image: xcode10
-
-  - os: osx
-    osx_image: xcode10.1
-
-  - os: osx
     osx_image: xcode10.2
 
   - os: osx
@@ -310,7 +298,7 @@ matrix:
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-7']
-        packages: ['g++-6', 'clang-7', 'ninja-build']
+        packages: ['g++-7', 'clang-7', 'ninja-build']
 
 ################
 # build script #
@@ -328,6 +316,7 @@ script:
 
   # make sure CXX is correctly set
   - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+  - if [[ "${CXXFLAGS}" != "" ]]; then export CXXFLAGS=${CXXFLAGS}; fi
   # by default, use the single-header version
   - if [[ "${MULTIPLE_HEADERS}" == "" ]]; then export MULTIPLE_HEADERS=OFF; fi
   # by default, use implicit conversions
@@ -335,9 +324,6 @@ script:
 
   # append CXX_STANDARD to CMAKE_OPTIONS if required
   - CMAKE_OPTIONS+=${CXX_STANDARD:+ -DCMAKE_CXX_STANDARD=$CXX_STANDARD -DCMAKE_CXX_STANDARD_REQUIRED=ON}
-
-  # force verbose build
-  - CMAKE_OPTIONS+=" -DCMAKE_VERBOSE_MAKEFILE=ON"
 
   # compile and execute unit tests
   - mkdir -p build && cd build

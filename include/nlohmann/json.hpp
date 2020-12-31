@@ -73,6 +73,10 @@ SOFTWARE.
 #include <nlohmann/json_fwd.hpp>
 #include <nlohmann/ordered_map.hpp>
 
+#if defined(JSON_HAS_CPP_17)
+    #include <string_view>
+#endif
+
 /*!
 @brief namespace for Niels Lohmann
 @see https://github.com/nlohmann
@@ -165,46 +169,8 @@ Format](http://rfc7159.net/rfc7159)
 
 @nosubgrouping
 */
-
-namespace detail
-{
-
-template <typename J, typename V>
-class JSON_HEDLEY_EMPTY_BASES optional_converter_helper_base
-{
-#ifdef JSON_HAS_CPP_17
-
-    using result_type = optional<V>;
-
-    auto get() const
-    {
-        return static_cast<const J*>(this)->template get<result_type>();
-    }
-
-  public:
-
-    operator result_type ()
-    {
-        return get();
-    }
-
-    operator result_type () const
-    {
-        return get();
-    }
-
-#endif
-};
-
-template <typename J, typename... V>
-class optional_converter_helper: public optional_converter_helper_base<J, V>... {};
-
-} // namespace detail
-
 NLOHMANN_BASIC_JSON_TPL_DECLARATION
 class basic_json
-    : public detail::optional_converter_helper<NLOHMANN_BASIC_JSON_TPL,
-      StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType>
 {
   private:
     template<detail::value_t> friend struct detail::external_constructor;
@@ -961,14 +927,14 @@ class basic_json
         AllocatorType<T> alloc;
         using AllocatorTraits = std::allocator_traits<AllocatorType<T>>;
 
-        auto deleter = [&](T * object)
+        auto deleter = [&](T * obj)
         {
-            AllocatorTraits::deallocate(alloc, object, 1);
+            AllocatorTraits::deallocate(alloc, obj, 1);
         };
-        std::unique_ptr<T, decltype(deleter)> object(AllocatorTraits::allocate(alloc, 1), deleter);
-        AllocatorTraits::construct(alloc, object.get(), std::forward<Args>(args)...);
-        JSON_ASSERT(object != nullptr);
-        return object.release();
+        std::unique_ptr<T, decltype(deleter)> obj(AllocatorTraits::allocate(alloc, 1), deleter);
+        AllocatorTraits::construct(alloc, obj.get(), std::forward<Args>(args)...);
+        JSON_ASSERT(obj != nullptr);
+        return obj.release();
     }
 
     ////////////////////////
@@ -3268,7 +3234,7 @@ class basic_json
                    !detail::is_basic_json<ValueType>::value
                    && !std::is_same<ValueType, std::initializer_list<typename string_t::value_type>>::value
 #if defined(JSON_HAS_CPP_17) && (defined(__GNUC__) || (defined(_MSC_VER) && _MSC_VER >= 1910 && _MSC_VER <= 1914))
-                   && !std::is_same<ValueType, string_view>::value
+                   && !std::is_same<ValueType, typename std::string_view>::value
 #endif
                    && detail::is_detected<detail::get_template_function, const basic_json_t&, ValueType>::value
                    , int >::type = 0 >
@@ -5470,8 +5436,12 @@ class basic_json
         }
 
         // add element to array (perfect forwarding)
+#ifdef JSON_HAS_CPP_17
+        return m_value.array->emplace_back(std::forward<Args>(args)...);
+#else
         m_value.array->emplace_back(std::forward<Args>(args)...);
         return m_value.array->back();
+#endif
     }
 
     /*!

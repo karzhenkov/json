@@ -32,7 +32,6 @@ SOFTWARE.
 #define JSON_TESTS_PRIVATE
 #include <nlohmann/json.hpp>
 using nlohmann::json;
-using namespace nlohmann::std_aliases;
 
 #include <deque>
 #include <forward_list>
@@ -462,7 +461,7 @@ TEST_CASE("value conversion")
 #if defined(JSON_HAS_CPP_17)
         SECTION("std::string_view")
         {
-            string_view s = j.get<string_view>();
+            std::string_view s = j.get<std::string_view>();
             CHECK(json(s) == j);
         }
 #endif
@@ -511,27 +510,27 @@ TEST_CASE("value conversion")
 #if defined(JSON_HAS_CPP_17)
         SECTION("exception in case of a non-string type using string_view")
         {
-            CHECK_THROWS_AS(json(json::value_t::null).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::object).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::array).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::boolean).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::number_integer).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::number_unsigned).get<string_view>(), json::type_error&);
-            CHECK_THROWS_AS(json(json::value_t::number_float).get<string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::null).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::object).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::array).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::boolean).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::number_integer).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::number_unsigned).get<std::string_view>(), json::type_error&);
+            CHECK_THROWS_AS(json(json::value_t::number_float).get<std::string_view>(), json::type_error&);
 
-            CHECK_THROWS_WITH(json(json::value_t::null).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::null).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is null");
-            CHECK_THROWS_WITH(json(json::value_t::object).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::object).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is object");
-            CHECK_THROWS_WITH(json(json::value_t::array).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::array).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is array");
-            CHECK_THROWS_WITH(json(json::value_t::boolean).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::boolean).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is boolean");
-            CHECK_THROWS_WITH(json(json::value_t::number_integer).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::number_integer).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is number");
-            CHECK_THROWS_WITH(json(json::value_t::number_unsigned).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::number_unsigned).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is number");
-            CHECK_THROWS_WITH(json(json::value_t::number_float).get<string_view>(),
+            CHECK_THROWS_WITH(json(json::value_t::number_float).get<std::string_view>(),
                               "[json.exception.type_error.302] type must be string, but is number");
         }
 #endif
@@ -559,7 +558,7 @@ TEST_CASE("value conversion")
         SECTION("std::string_view")
         {
             std::string s = "previous value";
-            string_view sv = s;
+            std::string_view sv = s;
             j.get_to(sv);
             CHECK(json(sv) == j);
         }
@@ -614,7 +613,7 @@ TEST_CASE("value conversion")
 #if defined(JSON_HAS_CPP_17)
         SECTION("std::string_view")
         {
-            string_view s = j.get<string_view>();
+            std::string_view s = j.get<std::string_view>();
             CHECK(json(s) == j);
         }
 #endif
@@ -1710,67 +1709,63 @@ TEST_CASE("std::optional")
     SECTION("null")
     {
         json j_null;
-        optional<std::string> opt_null;
+        std::optional<std::string> opt_null;
 
         CHECK(json(opt_null) == j_null);
-        CHECK_THROWS_WITH(optional<std::string>(j_null),
-                          "[json.exception.type_error.302] type must be string, but is null");
-
-        optional<std::string> tmp = j_null;
-        CHECK(tmp == nullopt);
-
-        CHECK_THROWS_WITH(optional<bool>(json()),
-                          "[json.exception.type_error.302] type must be boolean, but is null");
-
-        optional<bool> tmp2 = json();
-        CHECK(tmp2 == nullopt);
+        CHECK(std::optional<std::string>(j_null) == std::nullopt);
     }
 
     SECTION("string")
     {
         json j_string = "string";
-        optional<std::string> opt_string = "string";
+        std::optional<std::string> opt_string = "string";
 
         CHECK(json(opt_string) == j_string);
-        CHECK(optional<std::string>(j_string) == opt_string);
+        CHECK(std::optional<std::string>(j_string) == opt_string);
     }
 
     SECTION("bool")
     {
         json j_bool = true;
-        optional<bool> opt_bool = true;
+        std::optional<bool> opt_bool = true;
 
         CHECK(json(opt_bool) == j_bool);
-        CHECK(optional<bool>(j_bool) == opt_bool);
+        CHECK(std::optional<bool>(j_bool) == opt_bool);
     }
 
     SECTION("number")
     {
         json j_number = 1;
-        optional<int> opt_int = 1;
+        std::optional<int> opt_int = 1;
 
         CHECK(json(opt_int) == j_number);
-        CHECK(optional<int>(j_number) == opt_int);
+        CHECK(std::optional<int>(j_number) == opt_int);
     }
 
     SECTION("array")
     {
         json j_array = {1, 2, nullptr};
-        std::vector<optional<int>> opt_array = {{1, 2, nullopt}};
+        std::vector<std::optional<int>> opt_array = {{1, 2, std::nullopt}};
 
         CHECK(json(opt_array) == j_array);
-        std::vector<optional<int>> tmp = j_array;
-        CHECK(tmp == opt_array);
+        CHECK(std::vector<std::optional<int>>(j_array) == opt_array);
     }
 
     SECTION("object")
     {
         json j_object = {{"one", 1}, {"two", 2}, {"zero", nullptr}};
-        std::map<std::string, optional<int>> opt_object {{"one", 1}, {"two", 2}, {"zero", nullopt}};
+        std::map<std::string, std::optional<int>> opt_object {{"one", 1}, {"two", 2}, {"zero", std::nullopt}};
 
         CHECK(json(opt_object) == j_object);
-        std::map<std::string, optional<int>> tmp = j_object;
-        CHECK(tmp == opt_object);
+        CHECK(std::map<std::string, std::optional<int>>(j_object) == opt_object);
     }
 }
+#endif
+
+#ifdef JSON_HAS_CPP_17
+    #undef JSON_HAS_CPP_17
+#endif
+
+#ifdef JSON_HAS_CPP_14
+    #undef JSON_HAS_CPP_14
 #endif

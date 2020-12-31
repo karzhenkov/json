@@ -48,10 +48,11 @@ using nlohmann::json;
 #endif
 
 #ifdef JSON_HAS_CPP_17
-    #if __has_include(<variant>)
-        #define HAS_STD_VARIANT
-        #include <variant>
-    #endif
+    #include <variant>
+#endif
+
+#ifdef JSON_HAS_CPP_20
+    #include <span>
 #endif
 
 /////////////////////////////////////////////////////////////////////
@@ -250,7 +251,7 @@ TEST_CASE("regression tests 2")
         CHECK(diffs.size() == 1); // Note the change here, was 2
     }
 
-#ifdef HAS_STD_VARIANT
+#ifdef JSON_HAS_CPP_17
     SECTION("issue #1292 - Serializing std::variant causes stack overflow")
     {
         static_assert(
@@ -487,4 +488,14 @@ TEST_CASE("regression tests 2")
         json j = json::parse(ss, nullptr, true, true);
         CHECK(j.dump() == "{}");
     }
+
+#ifdef JSON_HAS_CPP_20
+    SECTION("issue #2546 - parsing containers of std::byte")
+    {
+        const char DATA[] = R"("Hello, world!")";
+        const auto s = std::as_bytes(std::span(DATA));
+        json j = json::parse(s);
+        CHECK(j.dump() == "\"Hello, world!\"");
+    }
+#endif
 }

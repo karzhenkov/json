@@ -1,7 +1,7 @@
 # Project information
 site_name: JSON for Modern C++
 site_author: Niels Lohmann
-site_url: https://squidfunk.github.io/mkdocs-material/
+site_url: https://json.nlohmann.me/
 
 # Repository
 repo_name: nlohmann/json
@@ -81,8 +81,10 @@ nav:
         - api/basic_json/~basic_json.md
         - api/basic_json/begin.md
         - api/basic_json/binary.md
+        - api/basic_json/binary_t.md
         - api/basic_json/boolean_t.md
         - api/basic_json/cbegin.md
+        - api/basic_json/cbor_tag_handler_t.md
         - api/basic_json/cend.md
         - api/basic_json/clear.md
         - api/basic_json/contains.md
@@ -97,6 +99,7 @@ nav:
         - api/basic_json/end.md
         - api/basic_json/erase.md
         - api/basic_json/error_handler_t.md
+        - api/basic_json/exception.md
         - api/basic_json/find.md
         - api/basic_json/flatten.md
         - api/basic_json/from_bson.md
@@ -104,7 +107,15 @@ nav:
         - api/basic_json/from_msgpack.md
         - api/basic_json/from_ubjson.md
         - api/basic_json/front.md
+        - api/basic_json/get.md
+        - api/basic_json/get_allocator.md
+        - api/basic_json/get_binary.md
+        - api/basic_json/get_ptr.md
+        - api/basic_json/get_ref.md
+        - api/basic_json/get_to.md
+        - api/basic_json/input_format_t.md
         - api/basic_json/insert.md
+        - api/basic_json/invalid_iterator.md
         - api/basic_json/is_array.md
         - api/basic_json/is_binary.md
         - api/basic_json/is_boolean.md
@@ -119,6 +130,7 @@ nav:
         - api/basic_json/is_string.md
         - api/basic_json/is_structured.md
         - api/basic_json/items.md
+        - api/basic_json/json_serializer.md
         - api/basic_json/max_size.md
         - api/basic_json/meta.md
         - api/basic_json/merge_patch.md
@@ -126,16 +138,25 @@ nav:
         - api/basic_json/number_integer_t.md
         - api/basic_json/number_unsigned_t.md
         - api/basic_json/object.md
+        - api/basic_json/object_comparator_t.md
         - api/basic_json/object_t.md
+        - api/basic_json/operator_ValueType.md
         - api/basic_json/operator_value_t.md
         - api/basic_json/operator[].md
         - api/basic_json/operator=.md
-        - api/basic_json/operator==.md
-        - api/basic_json/operator!=.md
+        - api/basic_json/operator_eq.md
+        - api/basic_json/operator_ne.md
+        - api/basic_json/operator_lt.md
+        - api/basic_json/operator_le.md
+        - api/basic_json/operator_gt.md
+        - api/basic_json/operator_ge.md
         - api/basic_json/operator+=.md
         - api/basic_json/operator_literal_json.md
         - api/basic_json/operator_literal_json_pointer.md
+        - api/basic_json/out_of_range.md
+        - api/basic_json/other_error.md
         - api/basic_json/parse.md
+        - api/basic_json/parse_error.md
         - api/basic_json/parse_event_t.md
         - api/basic_json/parser_callback_t.md
         - api/basic_json/patch.md
@@ -150,11 +171,13 @@ nav:
         - api/basic_json/to_msgpack.md
         - api/basic_json/to_ubjson.md
         - api/basic_json/type.md
+        - api/basic_json/type_error.md
         - api/basic_json/type_name.md
         - api/basic_json/unflatten.md
         - api/basic_json/update.md
         - api/basic_json/value.md
         - api/basic_json/value_t.md
+      - api/adl_serializer.md
       - api/json.md
       - api/json_pointer.md
       - api/ordered_map.md

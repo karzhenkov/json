@@ -31,35 +31,11 @@
     #define JSON_HAS_CPP_14
 #endif
 
-namespace nlohmann {
-namespace std_aliases { }
-using namespace std_aliases;
-}
-
-#if defined(JSON_HAS_CPP_17)
+#ifdef JSON_HAS_CPP_17
     #if __has_include(<optional>)
         #include <optional>
-        namespace nlohmann::std_aliases {
-            using std::optional;
-            using std::nullopt;
-        }
     #elif __has_include(<experimental/optional>)
         #include <experimental/optional>
-        namespace nlohmann::std_aliases {
-            using std::experimental::optional;
-            using std::experimental::nullopt;
-        }
-    #endif
-    #if __has_include(<string_view>)
-        #include <string_view>
-        namespace nlohmann::std_aliases {
-            using std::string_view;
-        }
-    #elif __has_include(<experimental/string_view>)
-        #include <experimental/string_view>
-        namespace nlohmann::std_aliases {
-            using std::experimental::string_view;
-        }
     #endif
 #endif
 
