@@ -128,20 +128,20 @@ class parse_error : public exception
     @param[in] what_arg  the explanatory string
     @return parse_error object
     */
-    template<typename BasicJsonType>
-    static parse_error create(int id_, const position_t& pos, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static parse_error create(int id_, const position_t& pos, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
         std::string w = exception::name("parse_error", id_) + "parse error" +
-                        position_string(pos) + ": " + diagnostics.diagnostics() + what_arg;
+                        position_string(pos) + ": " + diagnostics_message(context) + what_arg;
         return parse_error(id_, pos.chars_read_total, w.c_str());
     }
 
-    template<typename BasicJsonType>
-    static parse_error create(int id_, std::size_t byte_, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static parse_error create(int id_, std::size_t byte_, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
         std::string w = exception::name("parse_error", id_) + "parse error" +
                         (byte_ != 0 ? (" at byte " + std::to_string(byte_)) : "") +
-                        ": " + diagnostics.diagnostics() + what_arg;
+                        ": " + diagnostics_message(context) + what_arg;
         return parse_error(id_, byte_, w.c_str());
     }
 
@@ -207,10 +207,10 @@ caught.,invalid_iterator}
 class invalid_iterator : public exception
 {
   public:
-    template<typename BasicJsonType>
-    static invalid_iterator create(int id_, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static invalid_iterator create(int id_, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
-        std::string w = exception::name("invalid_iterator", id_) + diagnostics.diagnostics() + what_arg;
+        std::string w = exception::name("invalid_iterator", id_) + diagnostics_message(context) + what_arg;
         return invalid_iterator(id_, w.c_str());
     }
 
@@ -262,10 +262,10 @@ caught.,type_error}
 class type_error : public exception
 {
   public:
-    template<typename BasicJsonType>
-    static type_error create(int id_, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static type_error create(int id_, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
-        std::string w = exception::name("type_error", id_) + diagnostics.diagnostics() + what_arg;
+        std::string w = exception::name("type_error", id_) + diagnostics_message(context) + what_arg;
         return type_error(id_, w.c_str());
     }
 
@@ -310,10 +310,10 @@ caught.,out_of_range}
 class out_of_range : public exception
 {
   public:
-    template<typename BasicJsonType>
-    static out_of_range create(int id_, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static out_of_range create(int id_, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
-        std::string w = exception::name("out_of_range", id_) + diagnostics.diagnostics() + what_arg;
+        std::string w = exception::name("out_of_range", id_) + diagnostics_message(context) + what_arg;
         return out_of_range(id_, w.c_str());
     }
 
@@ -349,10 +349,10 @@ caught.,other_error}
 class other_error : public exception
 {
   public:
-    template<typename BasicJsonType>
-    static other_error create(int id_, const std::string& what_arg, const detail::diagnostics_t<BasicJsonType>& diagnostics)
+    template<typename DiagnosticsContext = std::nullptr_t>
+    static other_error create(int id_, const std::string& what_arg, const DiagnosticsContext& context = nullptr)
     {
-        std::string w = exception::name("other_error", id_) + diagnostics.diagnostics() + what_arg;
+        std::string w = exception::name("other_error", id_) + diagnostics_message(context) + what_arg;
         return other_error(id_, w.c_str());
     }
 

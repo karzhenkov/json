@@ -4,6 +4,7 @@
 #include <vector>
 #include <nlohmann/detail/value_t.hpp>
 #include <nlohmann/detail/string_escape.hpp>
+#include <nlohmann/detail/meta/type_traits.hpp>
 
 namespace nlohmann
 {
@@ -81,6 +82,28 @@ class diagnostics_t
   private:
     const BasicJsonType* m_j = nullptr;
 };
+
+template <typename DiagnosticsContext>
+std::string diagonstics_message(const DiagnosticsContext&) = delete;
+
+template <typename BasicJsonType>
+std::string diagnostics_message(const diagnostics_t<BasicJsonType>& context)
+{
+    return context.diagnostics();
+}
+
+template <typename BasicJsonType>
+typename std::enable_if<is_basic_json<BasicJsonType>::value, std::string>::type
+diagnostics_message(const BasicJsonType& context)
+{
+    return diagnostics_message(diagnostics_t<BasicJsonType>(context));
+}
+
+inline
+std::string diagnostics_message(std::nullptr_t)
+{
+    return {};
+}
 
 } // namespace detail
 } // namespace nlohmann
