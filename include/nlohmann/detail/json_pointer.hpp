@@ -8,7 +8,6 @@
 #include <utility> // move
 #include <vector> // vector
 
-#include <nlohmann/detail/diagnostics_t.hpp>
 #include <nlohmann/detail/exceptions.hpp>
 #include <nlohmann/detail/macro_scope.hpp>
 #include <nlohmann/detail/string_escape.hpp>
@@ -22,8 +21,6 @@ class json_pointer
     // allow basic_json to access private members
     NLOHMANN_BASIC_JSON_TPL_DECLARATION
     friend class basic_json;
-
-    using diagnostics_t = detail::diagnostics_t<BasicJsonType>;
 
   public:
     /*!
@@ -447,7 +444,7 @@ class json_pointer
                 single value; that is, with an empty list of reference tokens.
                 */
                 default:
-                    JSON_THROW(detail::type_error::create(313, "invalid value to unflatten", diagnostics_t(j)));
+                    JSON_THROW(detail::type_error::create(313, "invalid value to unflatten", j));
             }
         }
 
@@ -519,7 +516,7 @@ class json_pointer
                 }
 
                 default:
-                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", diagnostics_t(*ptr)));
+                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", *ptr));
             }
         }
 
@@ -552,7 +549,7 @@ class json_pointer
                         // "-" always fails the range check
                         JSON_THROW(detail::out_of_range::create(402,
                                                                 "array index '-' (" + std::to_string(ptr->m_value.array->size()) +
-                                                                ") is out of range", diagnostics_t(*ptr)));
+                                                                ") is out of range", *ptr));
                     }
 
                     // note: at performs range check
@@ -561,7 +558,7 @@ class json_pointer
                 }
 
                 default:
-                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", diagnostics_t(*ptr)));
+                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", *ptr));
             }
         }
 
@@ -599,7 +596,7 @@ class json_pointer
                     if (JSON_HEDLEY_UNLIKELY(reference_token == "-"))
                     {
                         // "-" cannot be used for const access
-                        JSON_THROW(detail::out_of_range::create(402, "array index '-' (" + std::to_string(ptr->m_value.array->size()) + ") is out of range", diagnostics_t(*ptr)));
+                        JSON_THROW(detail::out_of_range::create(402, "array index '-' (" + std::to_string(ptr->m_value.array->size()) + ") is out of range", *ptr));
                     }
 
                     // use unchecked array access
@@ -608,7 +605,7 @@ class json_pointer
                 }
 
                 default:
-                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", diagnostics_t(*ptr)));
+                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", *ptr));
             }
         }
 
@@ -641,7 +638,7 @@ class json_pointer
                         // "-" always fails the range check
                         JSON_THROW(detail::out_of_range::create(402,
                                                                 "array index '-' (" + std::to_string(ptr->m_value.array->size()) +
-                                                                ") is out of range", diagnostics_t(*ptr)));
+                                                                ") is out of range", *ptr));
                     }
 
                     // note: at performs range check
@@ -650,7 +647,7 @@ class json_pointer
                 }
 
                 default:
-                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", diagnostics_t(*ptr)));
+                    JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + reference_token + "'", *ptr));
             }
         }
 
@@ -878,7 +875,7 @@ class json_pointer
     {
         if (JSON_HEDLEY_UNLIKELY(!value.is_object()))
         {
-            JSON_THROW(detail::type_error::create(314, "only objects can be unflattened", diagnostics_t(value)));
+            JSON_THROW(detail::type_error::create(314, "only objects can be unflattened", value));
         }
 
         BasicJsonType result;
@@ -888,7 +885,7 @@ class json_pointer
         {
             if (JSON_HEDLEY_UNLIKELY(!element.second.is_primitive()))
             {
-                JSON_THROW(detail::type_error::create(315, "values in object must be primitive", diagnostics_t(element.second)));
+                JSON_THROW(detail::type_error::create(315, "values in object must be primitive", element.second));
             }
 
             // assign value to reference pointed to by JSON pointer; Note that if
