@@ -251,7 +251,7 @@ class json_pointer
     {
         if (JSON_HEDLEY_UNLIKELY(empty()))
         {
-            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent", diagnostics_t()));
+            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent"));
         }
 
         reference_tokens.pop_back();
@@ -275,7 +275,7 @@ class json_pointer
     {
         if (JSON_HEDLEY_UNLIKELY(empty()))
         {
-            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent", diagnostics_t()));
+            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent"));
         }
 
         return reference_tokens.back();
@@ -341,13 +341,15 @@ class json_pointer
         // error condition (cf. RFC 6901, Sect. 4)
         if (JSON_HEDLEY_UNLIKELY(s.size() > 1 && s[0] == '0'))
         {
-            JSON_THROW(detail::parse_error::create(106, 0, "array index '" + s + "' must not begin with '0'", diagnostics_t()));
+            JSON_THROW(detail::parse_error::create(106, 0,
+                                                   "array index '" + s +
+                                                   "' must not begin with '0'"));
         }
 
         // error condition (cf. RFC 6901, Sect. 4)
         if (JSON_HEDLEY_UNLIKELY(s.size() > 1 && !(s[0] >= '1' && s[0] <= '9')))
         {
-            JSON_THROW(detail::parse_error::create(109, 0, "array index '" + s + "' is not a number", diagnostics_t()));
+            JSON_THROW(detail::parse_error::create(109, 0, "array index '" + s + "' is not a number"));
         }
 
         std::size_t processed_chars = 0;
@@ -358,20 +360,20 @@ class json_pointer
         }
         JSON_CATCH(std::out_of_range&)
         {
-            JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + s + "'", diagnostics_t()));
+            JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + s + "'"));
         }
 
         // check if the string was completely read
         if (JSON_HEDLEY_UNLIKELY(processed_chars != s.size()))
         {
-            JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + s + "'", diagnostics_t()));
+            JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + s + "'"));
         }
 
         // only triggered on special platforms (like 32bit), see also
         // https://github.com/nlohmann/json/pull/2203
         if (res >= static_cast<unsigned long long>((std::numeric_limits<size_type>::max)()))
         {
-            JSON_THROW(detail::out_of_range::create(410, "array index " + s + " exceeds size_type", diagnostics_t())); // LCOV_EXCL_LINE
+            JSON_THROW(detail::out_of_range::create(410, "array index " + s + " exceeds size_type")); // LCOV_EXCL_LINE
         }
 
         return static_cast<size_type>(res);
@@ -382,7 +384,7 @@ class json_pointer
     {
         if (JSON_HEDLEY_UNLIKELY(empty()))
         {
-            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent", diagnostics_t()));
+            JSON_THROW(detail::out_of_range::create(405, "JSON pointer has no parent"));
         }
 
         json_pointer result = *this;
@@ -752,7 +754,9 @@ class json_pointer
         // check if nonempty reference string begins with slash
         if (JSON_HEDLEY_UNLIKELY(reference_string[0] != '/'))
         {
-            JSON_THROW(detail::parse_error::create(107, 1, "JSON pointer must be empty or begin with '/' - was: '" + reference_string + "'", diagnostics_t()));
+            JSON_THROW(detail::parse_error::create(107, 1,
+                                                   "JSON pointer must be empty or begin with '/' - was: '" +
+                                                   reference_string + "'"));
         }
 
         // extract the reference tokens:
@@ -787,7 +791,7 @@ class json_pointer
                                          (reference_token[pos + 1] != '0' &&
                                           reference_token[pos + 1] != '1')))
                 {
-                    JSON_THROW(detail::parse_error::create(108, 0, "escape character '~' must be followed with '0' or '1'", diagnostics_t()));
+                    JSON_THROW(detail::parse_error::create(108, 0, "escape character '~' must be followed with '0' or '1'"));
                 }
             }
 

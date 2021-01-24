@@ -1066,7 +1066,7 @@ class basic_json
                     object = nullptr;  // silence warning, see #821
                     if (JSON_HEDLEY_UNLIKELY(t == value_t::null))
                     {
-                        JSON_THROW(other_error::create(500, "961c151d2e87f2686a955a9be24d316f1362bf21 3.9.1", diagnostics_t())); // LCOV_EXCL_LINE
+                        JSON_THROW(other_error::create(500, "961c151d2e87f2686a955a9be24d316f1362bf21 3.9.1")); // LCOV_EXCL_LINE
                     }
                     break;
                 }
@@ -1707,7 +1707,7 @@ class basic_json
             // if object is wanted but impossible, throw an exception
             if (JSON_HEDLEY_UNLIKELY(manual_type == value_t::object && !is_an_object))
             {
-                JSON_THROW(type_error::create(301, "cannot create object from initializer list", diagnostics_t()));
+                JSON_THROW(type_error::create(301, "cannot create object from initializer list"));
             }
         }
 
@@ -2012,7 +2012,7 @@ class basic_json
         // make sure iterator fits the current value
         if (JSON_HEDLEY_UNLIKELY(first.m_object != last.m_object))
         {
-            JSON_THROW(invalid_iterator::create(201, "iterators are not compatible", diagnostics_t()));
+            JSON_THROW(invalid_iterator::create(201, "iterators are not compatible"));
         }
 
         // copy type from first iterator
@@ -2030,7 +2030,7 @@ class basic_json
                 if (JSON_HEDLEY_UNLIKELY(!first.m_it.primitive_iterator.is_begin()
                                          || !last.m_it.primitive_iterator.is_end()))
                 {
-                    JSON_THROW(invalid_iterator::create(204, "iterators out of range", diagnostics_t()));
+                    JSON_THROW(invalid_iterator::create(204, "iterators out of range"));
                 }
                 break;
             }
@@ -2092,7 +2092,7 @@ class basic_json
             }
 
             default:
-                JSON_THROW(invalid_iterator::create(206, "cannot construct with iterators from " + std::string(first.m_object->type_name()), diagnostics_t()));
+                JSON_THROW(invalid_iterator::create(206, "cannot construct with iterators from " + std::string(first.m_object->type_name())));
         }
 
         set_parents();
