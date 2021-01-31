@@ -31,9 +31,7 @@
     #define JSON_HAS_CPP_14
 #endif
 
-#ifdef JSON_HAS_CPP_17
-    #include <optional>
-#endif
+#include <nlohmann/optional.hpp>
 
 // disable float-equal warnings on GCC/clang
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
