@@ -1713,6 +1713,16 @@ TEST_CASE("std::optional")
 
         CHECK(json(opt_null) == j_null);
         CHECK(j_null.get<std::optional<std::string>>() == std::nullopt);
+
+        using opt_int = std::optional<int>;
+
+        auto opt1 = []() -> opt_int { return json().get<opt_int>(); };
+        auto opt2 = []() -> opt_int { return opt_int(json()); };
+        auto opt3 = []() -> opt_int { return json(); };
+
+        CHECK(opt1() == std::nullopt);
+        CHECK_THROWS_AS(opt2(), json::type_error&);
+        CHECK_THROWS_AS(opt3(), json::type_error&);
     }
 
     SECTION("string")
@@ -1770,6 +1780,16 @@ TEST_CASE("nlohmann::optional")
 
         CHECK(json(opt_null) == j_null);
         CHECK(j_null.get<nlohmann::optional<std::string>>() == std::nullopt);
+
+        using opt_int = nlohmann::optional<int>;
+
+        auto opt1 = []() -> opt_int { return json().get<opt_int>(); };
+        auto opt2 = []() -> opt_int { return opt_int(json()); };
+        auto opt3 = []() -> opt_int { return json(); };
+
+        CHECK(opt1() == std::nullopt);
+        CHECK(opt2() == std::nullopt);
+        CHECK(opt3() == std::nullopt);
     }
 
     SECTION("string")
