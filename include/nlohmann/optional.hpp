@@ -12,14 +12,11 @@ class optional : public std::optional<T>
 {
     using base_type = std::optional<T>;
 
-    template <typename U>
-    using try_conversion_operator = decltype(std::declval<U>().operator optional());
-
     template <typename U, typename = optional>
     struct has_conversion_operator : std::false_type { };
 
     template <typename U>
-    struct has_conversion_operator<U, try_conversion_operator<U>> : std::true_type { };
+  struct has_conversion_operator<U, decltype(std::declval<U>().operator optional())> : std::true_type { };
 
     template <typename... U>
     using is_base_constructible_from = std::is_constructible<base_type, U...>;
