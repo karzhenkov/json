@@ -26,35 +26,38 @@ class optional : public std::optional<T>
     using is_convertible_to_base = std::is_convertible<U, base_type>;
 
     template <typename U>
+    using enable_int_if = std::enable_if_t<U::value, int>;
+
+    template <typename U>
     using use_conversion_operator =
-        std::enable_if_t<
-            has_conversion_operator<U>::value, int
+        enable_int_if<
+            has_conversion_operator<U>
         >;
 
     template <typename U>
     using use_implicit_forwarding =
-        std::enable_if_t<
+        enable_int_if<
             std::conjunction<
                 std::negation<has_conversion_operator<U>>,
                 is_base_constructible_from<U>,
                 is_convertible_to_base<U>
-            >::value, int
+            >
         >;
 
     template <typename U>
     using use_explicit_forwarding =
-        std::enable_if_t<
+        enable_int_if<
             std::conjunction<
                 std::negation<has_conversion_operator<U>>,
                 is_base_constructible_from<U>,
                 std::negation<is_convertible_to_base<U>>
-            >::value, int
+            >
         >;
 
     template <typename... U>
     using can_construct_base_from =
-        std::enable_if_t<
-            is_base_constructible_from<U...>::value, int
+        enable_int_if<
+            is_base_constructible_from<U...>
         >;
 
   public:
