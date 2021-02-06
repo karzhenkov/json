@@ -2108,66 +2108,11 @@ JSON_HEDLEY_DIAGNOSTIC_POP
     #define JSON_HAS_CPP_14
 #endif
 
-// #include <nlohmann/optional.hpp>
-
-
-// #include <nlohmann/optional_cmp.hpp>
-
-
-// #include <nlohmann/detail/macro_scope.hpp>
-
-
 #ifdef JSON_HAS_CPP_17
+    // #include <nlohmann/optional.hpp>
+
 
 #include <optional>
-
-namespace nlohmann
-{
-
-template <typename T> class optional;
-
-template<class T, class U>
-constexpr bool operator == (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() == rhs.base();
-}
-
-template<class T, class U>
-constexpr bool operator != (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() != rhs.base();
-}
-
-template<class T, class U>
-constexpr bool operator < (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() < rhs.base();
-}
-
-template<class T, class U>
-constexpr bool operator <= (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() <= rhs.base();
-}
-
-template<class T, class U>
-constexpr bool operator > (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() > rhs.base();
-}
-
-template<class T, class U>
-constexpr bool operator >= (const optional<T>& lhs, const optional<U>& rhs)
-{
-    return lhs.base() >= rhs.base();
-}
-
-}  // namespace nlohmann
-
-#endif  // JSON_HAS_CPP_17
-
-
-#ifdef JSON_HAS_CPP_17
 
 namespace nlohmann
 {
@@ -2175,21 +2120,22 @@ namespace nlohmann
 template <typename T>
 class optional : public std::optional<T>
 {
+    // *INDENT-OFF*
+
     using base_type = std::optional<T>;
 
     template <typename U, typename = optional>
     struct has_conversion_operator : std::false_type { };
 
     template <typename U>
-  struct has_conversion_operator<U, decltype(std::declval<U>().operator optional())> : std::true_type { };
+    struct has_conversion_operator<U,
+        decltype(std::declval<U>().operator optional())> : std::true_type { };
 
     template <typename... U>
     using is_base_constructible_from = std::is_constructible<base_type, U...>;
 
     template <typename U>
     using is_convertible_to_base = std::is_convertible<U, base_type>;
-
-    // *INDENT-OFF*
 
     template <typename U>
     using use_conversion_operator =
@@ -2223,8 +2169,6 @@ class optional : public std::optional<T>
             is_base_constructible_from<U...>::value, int
         >;
 
-    // *INDENT-ON*
-
   public:
 
     const base_type& base() const
@@ -2238,8 +2182,6 @@ class optional : public std::optional<T>
         : base_type(std::nullopt)
     {
     }
-
-    // *INDENT-OFF*
 
     template <typename U, use_conversion_operator<U> = 0>
     constexpr optional(U&& value)
@@ -2292,10 +2234,45 @@ class optional : public std::optional<T>
     // *INDENT-ON*
 };
 
+template<class T, class U>
+constexpr bool operator == (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() == rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator != (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() != rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator < (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() < rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator <= (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() <= rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator > (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() > rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator >= (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() >= rhs.base();
+}
+
 }  // namespace nlohmann
 
-#endif  // JSON_HAS_CPP_17
-
+#endif
 
 // disable float-equal warnings on GCC/clang
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
@@ -17060,7 +17037,7 @@ class basic_json
         detail::parser_callback_t<basic_json>cb = nullptr,
         const bool allow_exceptions = true,
         const bool ignore_comments = false
-                                 )
+    )
     {
         return ::nlohmann::detail::parser<basic_json, InputAdapterType>(std::move(adapter),
                 std::move(cb), allow_exceptions, ignore_comments);
@@ -25605,7 +25582,7 @@ template<>
 inline void swap<nlohmann::json>(nlohmann::json& j1, nlohmann::json& j2) noexcept(
     is_nothrow_move_constructible<nlohmann::json>::value&&
     is_nothrow_move_assignable<nlohmann::json>::value
-                              )
+)
 {
     j1.swap(j2);
 }

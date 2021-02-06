@@ -1,8 +1,6 @@
 #pragma once
 
-#include <nlohmann/optional_cmp.hpp>
-
-#ifdef JSON_HAS_CPP_17
+#include <optional>
 
 namespace nlohmann
 {
@@ -10,21 +8,22 @@ namespace nlohmann
 template <typename T>
 class optional : public std::optional<T>
 {
+    // *INDENT-OFF*
+
     using base_type = std::optional<T>;
 
     template <typename U, typename = optional>
     struct has_conversion_operator : std::false_type { };
 
     template <typename U>
-  struct has_conversion_operator<U, decltype(std::declval<U>().operator optional())> : std::true_type { };
+    struct has_conversion_operator<U,
+        decltype(std::declval<U>().operator optional())> : std::true_type { };
 
     template <typename... U>
     using is_base_constructible_from = std::is_constructible<base_type, U...>;
 
     template <typename U>
     using is_convertible_to_base = std::is_convertible<U, base_type>;
-
-    // *INDENT-OFF*
 
     template <typename U>
     using use_conversion_operator =
@@ -58,8 +57,6 @@ class optional : public std::optional<T>
             is_base_constructible_from<U...>::value, int
         >;
 
-    // *INDENT-ON*
-
   public:
 
     const base_type& base() const
@@ -73,8 +70,6 @@ class optional : public std::optional<T>
         : base_type(std::nullopt)
     {
     }
-
-    // *INDENT-OFF*
 
     template <typename U, use_conversion_operator<U> = 0>
     constexpr optional(U&& value)
@@ -127,6 +122,40 @@ class optional : public std::optional<T>
     // *INDENT-ON*
 };
 
-}  // namespace nlohmann
+template<class T, class U>
+constexpr bool operator == (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() == rhs.base();
+}
 
-#endif  // JSON_HAS_CPP_17
+template<class T, class U>
+constexpr bool operator != (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() != rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator < (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() < rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator <= (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() <= rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator > (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() > rhs.base();
+}
+
+template<class T, class U>
+constexpr bool operator >= (const optional<T>& lhs, const optional<U>& rhs)
+{
+    return lhs.base() >= rhs.base();
+}
+
+}  // namespace nlohmann
