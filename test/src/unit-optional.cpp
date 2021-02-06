@@ -102,6 +102,8 @@ TEST_CASE("nlohmann::optional constructors")
 
     std::vector<int> vec{1, 2, 3};
     CHECK(*opt_vec(in_place, vec.begin(), vec.end()) == vec);
+
+    CHECK(opt_vec({1, 2, 3})->size() == 3);
 }
 
 TEST_CASE("nlohmann::optional copy")

@@ -83,7 +83,7 @@ class optional : public std::optional<T>
     {
     }
 
-    template <typename U, use_implicit_forwarding<U> = 0>
+    template <typename U = T, use_implicit_forwarding<U> = 0>
     constexpr optional(U&& value)
         noexcept(noexcept(
             base_type(std::forward<U>(value))
