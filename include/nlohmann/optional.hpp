@@ -55,9 +55,9 @@ class optional : public std::optional<T>
         >;
 
     template <typename... U>
-    using can_construct_base_from =
+    using can_construct_in_place_from =
         enable_int_if<
-            is_base_constructible_from<U...>
+            is_base_constructible_from<std::in_place_t, U...>
         >;
 
   public:
@@ -102,17 +102,17 @@ class optional : public std::optional<T>
     {
     }
 
-    template <typename U, typename... Args, can_construct_base_from<U, Args...> = 0>
+    template <typename U, typename... Args, can_construct_in_place_from<U, Args...> = 0>
     explicit
     constexpr optional(std::in_place_t, U&& u, Args&&... args)
         noexcept(noexcept(
-            base_type(std::in_place, std::forward<U, Args...>(u, args...))
+            base_type(std::in_place, std::forward<U>(u), std::forward<Args>(args)...)
         )) :
-            base_type(std::in_place, std::forward<U, Args...>(u, args...))
+            base_type(std::in_place, std::forward<U>(u), std::forward<Args>(args)...)
     {
     }
 
-    template <typename U, typename... Args, can_construct_base_from<std::initializer_list<U>&, Args...> = 0>
+    template <typename U, typename... Args, can_construct_in_place_from<std::initializer_list<U>&, Args...> = 0>
     explicit
     constexpr optional(std::in_place_t, std::initializer_list<U> u, Args&&... args)
         noexcept(noexcept(

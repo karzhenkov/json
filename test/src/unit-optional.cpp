@@ -99,6 +99,9 @@ TEST_CASE("nlohmann::optional constructors")
     CHECK(opt_vec(in_place, 5)->size() == 5);
     CHECK(opt_vec(in_place, {1, 2, 3}) == std_opt_vec(in_place, {1, 2, 3}));
     CHECK(**opt_ptr(in_place, new int{42}) == **std_opt_ptr(in_place, new int{42}));
+
+    std::vector<int> vec{1, 2, 3};
+    CHECK(*opt_vec(in_place, vec.begin(), vec.end()) == vec);
 }
 
 TEST_CASE("nlohmann::optional copy")
